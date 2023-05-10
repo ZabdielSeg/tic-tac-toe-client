@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import Square from './Square';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 const GameBoard = ({ theUser, socket, updateUser }) => {
+    const { gameID } = useParams();
+
     const [board, setBoard] = useState(["", "", "", "", "", "", "", "", ""])
     const [player, setPlayer] = useState("X");
     const [turn, setTurn] = useState(0)
@@ -17,7 +20,7 @@ const GameBoard = ({ theUser, socket, updateUser }) => {
                 }
                 return val
             });
-            socket.emit('move', { player, updatedBoard, turn })
+            socket.emit('move', { player, updatedBoard, turn, gameID })
         }
     }
 
@@ -50,7 +53,7 @@ const GameBoard = ({ theUser, socket, updateUser }) => {
             setWinner(players[turn == 0 ? 1 : 0]);
             if(theUser.username === players[turn == 0 ? 1 : 0]) {
                 axios
-                    .put(`http://localhost:4000/update-user/${theUser._id}`, { winsCounter: theUser.winsCounter + 1})
+                    .put(`${process.env.REACT_APP_API_URL}/update-user/${theUser._id}`, { winsCounter: theUser.winsCounter + 1})
                     .then(response => updateUser(response.data))
             }
         }
@@ -63,7 +66,9 @@ const GameBoard = ({ theUser, socket, updateUser }) => {
 
     useEffect(() => {
         socket.on('start-game', data => {
-            setPlayers(data)
+            const [player1, player2] = data;
+            const playersInRoom = [player1.theUser.username, player2.theUser.username];
+            setPlayers(playersInRoom)
         })
     }, [])
 
