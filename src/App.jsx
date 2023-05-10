@@ -6,7 +6,7 @@ import Lobby from './pages/Lobby';
 import NavBar from './components/NavBar/NavBar';
 import GameRoom from './pages/GameRoom';
 import { Route, Routes } from 'react-router-dom';
-const socket = io('http://localhost:4000')
+const socket = io('192.168.100.88:4000')
 
 function App() {
   const [user, setUser] = useState({});
@@ -33,7 +33,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Login getTheUser={getTheUser} addUser={addUser} socket={socket} />} />
           <Route path='/lobby' element={<Lobby socket={socket} theUser={user} />} />
-          <Route path='/game-room' element={<GameRoom theUser={user} socket={socket} getTheUser={getTheUser} />} />
+          <Route path='/game-room/:gameID' element={<GameRoom theUser={user} socket={socket} getTheUser={getTheUser} />} />
         </Routes>
       </div>
     </>

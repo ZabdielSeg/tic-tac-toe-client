@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import './index.css';
 
 const Chat = ({socket}) => {
   const [message, setMessage] = useState('');
@@ -26,10 +27,12 @@ const Chat = ({socket}) => {
       <div>
         <h3>Send your opponent a message</h3>
       </div>
-      <div className='border border-zinc-400 w-2/3 rounded shadow min-h-[50%] '>
+      <div className='border border-zinc-200 p-2 w-2/3 rounded shadow min-h-[50%] box-border overflow-auto max-h-[50%] text-center'>
       {
         messages.map((newMessage, idx) => (
-            <p key={idx}> {newMessage.from}: {newMessage.body}</p>
+          <div className={`${newMessage.from === 'Me' ? 'text-right' : 'text-left'} `}>
+            <p key={idx} className={`my-3 rounded-md py-2 tracking-in-expand-fwd-bottom bg-green-100 inline-block`}> {newMessage.from}: {newMessage.body}</p>
+          </div>
         ))
       }
       </div>
